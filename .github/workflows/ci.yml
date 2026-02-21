@@ -8,6 +8,12 @@ jobs:
   mongo-init:
     runs-on: ubuntu-latest
 
+    env:
+      PORT: ${{secrets.PORT}}
+      MONGO_URI: ${{secrets.MONGO_URI}}
+      JWT_SECRET: ${{secrets.JWT_SECRET}}
+
+
     services:
        mongo:
         image: mongo
@@ -36,29 +42,9 @@ jobs:
         run: |
           npm install
           node seedTaskData.js
-  test:
-    runs-on: ubuntu-latest
-    needs: mongo-init
-
-    env:
-      PORT: ${{secrets.PORT}}
-      MONGO_URI: ${{secrets.MONGO_URI}}
-      JWT_SECRET: ${{secrets.JWT_SECRET}}
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      - name: Setup Nodejs
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Install Dependancies for backend
-        working-directory: ./backend
-        run: npm install
-
+        
       - name: Running backend tests       
         working-directory: ./backend
         run: npm test
 
+   
